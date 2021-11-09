@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "nodemon server.js",
     "dev-react" : "(cd client && npm run build) && (cd .. && nodemon server)",
+    "build-client" : "(cd client && npm run build) && (git add ./ && git commit -m \"updated client build\")",
     "start" : "node server.js"
   },
   "keywords": [],
