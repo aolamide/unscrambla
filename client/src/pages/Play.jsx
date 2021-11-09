@@ -6,6 +6,7 @@ import HostWaiting from '../components/HostWaiting/HostWaiting';
 import GamePreparing from '../components/GamePreparing/GamePreparing';
 import Game from '../components/Game/Game';
 import NameForm from '../components/NameForm/NameForm';
+import Result from '../components/Result/Result';
 
 
 const Play = () => {
@@ -17,6 +18,7 @@ const Play = () => {
   const [hostWaiting, setHostWaiting] = useState(false);
   const [gamePreparing, setGamePreparing] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
+  const [gameEnded, setGameEnded] = useState(false);
   const [params, _] = useSearchParams();
   const socket = useContext(ConnectionContext);
   const navigate = useNavigate();
@@ -49,10 +51,17 @@ const Play = () => {
       setGameStarted(true);
     });
 
+    socket.on('gameEnded', () => {
+      setGameStarted(false);
+      setGameEnded(true);
+    });
+
     return (() => {
       socket.off('checkCodeResult');
       socket.off('gameCreated');
       socket.off('gameReady');
+      socket.off('gameStarted');
+      socket.off('gameEnded');
     })
   }, []);
 
@@ -72,7 +81,8 @@ const Play = () => {
   if(loading) return <Loading />
   if(hostWaiting) return <HostWaiting code={gameCode} />
   if(gamePreparing) return <GamePreparing name={name} opponentName={playerTwoName} />
-  if(gameStarted) return <Game />
+  if(gameStarted) return <Game name={name} opponentName={playerTwoName} gameCode={gameCode} host={isHost} />
+  if(gameEnded) return <Result />
   return (
     <NameForm host={isHost} gameCode={gameCode} />
   );

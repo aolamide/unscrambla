@@ -1,6 +1,7 @@
 const getGameId = require('./gameId');
+const { getRandomWord, scrambleWord } = require('./words');
 
-const games = [];
+const games = {};
 
 const initialGame = {
   host : '',
@@ -10,8 +11,10 @@ const initialGame = {
   hostScore : 0,
   playerTwoScore : 0,
   gameId : '',
-  gameHistory : [ { hostScore : 0, playerTwoScore : 0} ]
-}
+  gameHistory : [ { hostScore : 0, playerTwoScore : 0} ],
+  currentWord : '',
+  currentScrambled : ''
+};
 
 const createGame = (host, hostName) => {
   const gameId = getGameId();
@@ -19,12 +22,12 @@ const createGame = (host, hostName) => {
   game.gameId = gameId;
   game.host = host;
   game.hostName = hostName;
-  games.push(game);
+  games[gameId] = game;
   return game.gameId;
 }
 
 const checkCode = code => {
-  const gameExists = games.find(game => game.gameId === code);
+  const gameExists = games[code];
   if(gameExists && gameExists.playerTwo) return { success : false, msg : 'Game already has two players.'}
   else if(gameExists) return { success : true, game : gameExists }
   else return { success : false, msg : 'Game not found'}
@@ -35,10 +38,47 @@ const joinGame = (playerId, playerName, game) => {
   if(checkGame.success) {
     checkGame.game.playerTwo = playerId;
     checkGame.game.playerTwoName = playerName;
+    const startWord = getRandomWord();
+    checkGame.game.currentWord = startWord;
+    checkGame.game.currentScrambled = scrambleWord(startWord);
     return { success : true, game : checkGame.game };
   } else {
     return checkGame;
   }
 }
 
-module.exports = { createGame, checkCode, joinGame, games }
+const guessWord = (word, gameId, playerId) => {
+  const game = games[gameId];
+  if(game) {
+    if(word == game.currentWord) {
+      if(playerId == game.host) game.hostScore++;
+      else if(playerId == game.playerTwo) game.playerTwoScore++;
+      game.currentWord = game.currentScrambled = '';
+      const newWord = getRandomWord();
+      game.currentWord = newWord;
+      game.currentScrambled = scrambleWord(newWord);
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
+
+const getCurrentScrambledWord = gameCode => {
+  const game = games[gameCode];
+  if(game) {
+    return game.currentScrambled;
+  }
+  return '';
+}
+
+const getScores = gameCode => {
+  const game = games[gameCode];
+  if(game) {
+    const { hostScore, playerTwoScore } = game;
+    return { hostScore, playerTwoScore };
+  }
+  return false;
+}
+
+module.exports = { createGame, checkCode, joinGame, games, guessWord, getCurrentScrambledWord, getScores }
