@@ -1,0 +1,81 @@
+import React, { useContext, useEffect, useState } from 'react';
+import { ConnectionContext } from '../connection';
+import { useSearchParams, useNavigate } from 'react-router-dom'
+import Loading from '../components/Loading/Loading';
+import HostWaiting from '../components/HostWaiting/HostWaiting';
+import GamePreparing from '../components/GamePreparing/GamePreparing';
+import Game from '../components/Game/Game';
+import NameForm from '../components/NameForm/NameForm';
+
+
+const Play = () => {
+  const [loading, setLoading] = useState(true);
+  const [isHost, setIsHost] = useState(true);
+  const [gameCode, setGameCode] = useState('');
+  const [name, setName] = useState('');
+  const [playerTwoName, setPlayerTwoName] = useState('');
+  const [hostWaiting, setHostWaiting] = useState(false);
+  const [gamePreparing, setGamePreparing] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [params, _] = useSearchParams();
+  const socket = useContext(ConnectionContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    let code = params.get('code');
+    if(code) {
+      setIsHost(false);
+      socket.emit('checkCode', code);
+      socket.on('checkCodeResult', ({ success, msg }) => {
+        if(success) {
+          setLoading(false);
+          setGameCode(code);
+        } 
+        else {
+          alert(msg);
+          navigate('/');
+        }
+      })
+    } else {
+      setLoading(false);
+    }
+    socket.on('gameCreated', gameId => {
+      setGameCode(gameId);
+      setHostWaiting(true);
+    });
+    
+    socket.on('gameStarted', () => {
+      setGamePreparing(false);
+      setGameStarted(true);
+    });
+
+    return (() => {
+      socket.off('checkCodeResult');
+      socket.off('gameCreated');
+      socket.off('gameReady');
+    })
+  }, []);
+
+  useEffect(() => {
+    socket.on('gameReady', ({ host, playerTwo }) => {
+      setName(isHost ? host : playerTwo);
+      setPlayerTwoName(isHost ? playerTwo : host);
+      
+      setHostWaiting(false);
+      setGamePreparing(true);
+    });
+    return (() => {
+      socket.off('gameReady');
+    })
+  }, [isHost]);
+
+  if(loading) return <Loading />
+  if(hostWaiting) return <HostWaiting code={gameCode} />
+  if(gamePreparing) return <GamePreparing name={name} opponentName={playerTwoName} />
+  if(gameStarted) return <Game />
+  return (
+    <NameForm host={isHost} gameCode={gameCode} />
+  );
+}
+
+export default Play;
