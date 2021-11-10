@@ -19,6 +19,7 @@ const Play = () => {
   const [gamePreparing, setGamePreparing] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
+  const [results, setResults] = useState(null);
   const [params, _] = useSearchParams();
   const socket = useContext(ConnectionContext);
   const navigate = useNavigate();
@@ -51,7 +52,10 @@ const Play = () => {
       setGameStarted(true);
     });
 
-    socket.on('gameEnded', () => {
+    socket.on('gameEnded', result => {
+      if(result) {
+        setResults(result);
+      }
       setGameStarted(false);
       setGameEnded(true);
     });
@@ -82,7 +86,7 @@ const Play = () => {
   if(hostWaiting) return <HostWaiting code={gameCode} />
   if(gamePreparing) return <GamePreparing name={name} opponentName={playerTwoName} />
   if(gameStarted) return <Game name={name} opponentName={playerTwoName} gameCode={gameCode} host={isHost} />
-  if(gameEnded) return <Result />
+  if(gameEnded) return <Result results={results} host={isHost} name={name} opponentName={playerTwoName} />
   return (
     <NameForm host={isHost} gameCode={gameCode} />
   );

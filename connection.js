@@ -1,4 +1,4 @@
-const { createGame, checkCode, joinGame, guessWord, getCurrentScrambledWord, getScores } = require("./helpers/game");
+const { createGame, checkCode, joinGame, guessWord, getCurrentScrambledWord, getScores, getGameResults } = require("./helpers/game");
 
 module.exports = function(io) {
   io.on('connection', (socket) => {
@@ -22,7 +22,7 @@ module.exports = function(io) {
         setTimeout(() => {
           io.to(gameCode).emit('gameStarted');
           setTimeout(() => {
-            io.to(gameCode).emit('gameEnded');
+            io.to(gameCode).emit('gameEnded', getGameResults(gameCode));
           }, 1000 * 60 * 2)
         }, 10000);
       } else {

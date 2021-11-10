@@ -81,4 +81,13 @@ const getScores = gameCode => {
   return false;
 }
 
-module.exports = { createGame, checkCode, joinGame, games, guessWord, getCurrentScrambledWord, getScores }
+const getGameResults = gameCode => {
+  const game = games[gameCode];
+  if(game) {
+    const { hostScore, playerTwoScore, gameHistory } = game;
+    return { hostScore, playerTwoScore, gameHistory }
+  }
+  return false;
+}
+
+module.exports = { createGame, checkCode, joinGame, games, guessWord, getCurrentScrambledWord, getScores, getGameResults }

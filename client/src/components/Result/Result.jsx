@@ -1,9 +1,19 @@
 import React from 'react';
 
-const Result = () => {
+const Result = ({ results, host, name, opponentName }) => {
   return (
     <div>
-      Game results
+      <h1>Game result</h1>
+      <div style={{ display : 'flex' }}>
+        <div style={{ marginRight : '20px'}}>
+          <p>{name}</p>
+          <p><strong>{host ? results?.hostScore : results?.playerTwoScore}</strong></p>
+        </div>
+        <div>
+          <p>{opponentName}</p>
+          <p><strong>{ host ?  results?.playerTwoScore : results?.hostScore }</strong></p>
+        </div>
+      </div>
     </div>
   )
 };
