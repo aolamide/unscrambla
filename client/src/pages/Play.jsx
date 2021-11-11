@@ -7,7 +7,12 @@ import GamePreparing from '../components/GamePreparing/GamePreparing';
 import Game from '../components/Game/Game';
 import NameForm from '../components/NameForm/NameForm';
 import Result from '../components/Result/Result';
+import Layout from '../components/Layout/Layout';
 
+
+const showLayout = component => {
+  return <Layout>{component}</Layout>
+}
 
 const Play = () => {
   const [loading, setLoading] = useState(true);
@@ -83,13 +88,11 @@ const Play = () => {
   }, [isHost]);
 
   if(loading) return <Loading />
-  if(hostWaiting) return <HostWaiting code={gameCode} />
+  if(hostWaiting) return <HostWaiting code={gameCode} />;
   if(gamePreparing) return <GamePreparing name={name} opponentName={playerTwoName} />
   if(gameStarted) return <Game name={name} opponentName={playerTwoName} gameCode={gameCode} host={isHost} />
   if(gameEnded) return <Result results={results} host={isHost} name={name} opponentName={playerTwoName} />
-  return (
-    <NameForm host={isHost} gameCode={gameCode} />
-  );
+  return showLayout(<NameForm host={isHost} gameCode={gameCode} />);
 }
 
 export default Play;
