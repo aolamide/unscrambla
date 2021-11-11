@@ -2,6 +2,9 @@ import React, { useContext, useEffect, useState } from 'react'
 import { ConnectionContext } from '../../connection'
 
 import Timer from 'react-compound-timer';
+import GameScores from '../GameScores/GameScores';
+import AdminMessage from '../Messages/AdminMessage';
+import Message from '../Messages/Message';
 
 const Game = ({ name, opponentName, gameCode, host }) => {
   const [score, setScore] = useState(0);
@@ -13,7 +16,7 @@ const Game = ({ name, opponentName, gameCode, host }) => {
 
   const submitWord = e => {
     e.preventDefault();
-    socket.emit('playerTry', { wordPick : pick, gameCode, userId : socket.id });
+    socket.emit('playerTry', { wordPick : pick, gameCode, userName : name });
     setMessages(messages => [...messages, { type : 'user', msg : pick }]);
     setPick('');
   }
@@ -47,46 +50,40 @@ const Game = ({ name, opponentName, gameCode, host }) => {
   }, []);
 
   return (
-    <div>
-      <p>Game is live.</p>
-      <div style={{ display : 'flex', justifyContent : 'space-between' }}>
-        <div>
-          <p>{name}</p>
-          <p>{score}</p>
-        </div>
-        <div>vs</div>
-        <div>
-          <p>{opponentName}</p>
-          <p>{opponentScore}</p>
-        </div>
-      </div>
-      <div>
-        <Timer
-          initialTime={1000 * 60 * 2}
-          direction="backward"
-        >
-          <div>
-            <strong>
-              <Timer.Minutes /> :
-              <Timer.Seconds formatValue={(value) => `${(value < 10 ? ` 0${value}` : ` ${value}`)}`} />
-            </strong>
-            
+    <div className="bg-brown-light h-screen flex items-center justify-center">
+      <div className="w-full sm:w-8/12 md:max-w-4xl h-full sm:h-5-5/6 bg-gray rounded-md flex flex-col shadow-xl">
+        <div className="bg-sage p-3 sm:rounded-tl-md sm:rounded-tr-md">
+          <h1 className="font-cabin text-center text-white text-3xl mb-2">Unscrambla</h1>
+          <div className="flex justify-between">
+            <GameScores name={name} type={'you'} score={score} />
+            <div className="font-extrabold flex-grow text-center">vs</div>
+            <GameScores name={opponentName} type={'opponent'} score={opponentScore} />
           </div>
-        </Timer>
+          <div className="text-center text-3xl font-bold text-white">
+            <Timer
+              initialTime={1000 * 60 * 2}
+              direction="backward"
+            >
+              <Timer.Minutes formatValue={(value) => `${(value < 10 ? ` 0${value}` : `${value}`)}`} /> :
+              <Timer.Seconds formatValue={(value) => `${(value < 10 ? ` 0${value}` : ` ${value}`)}`} />
+            </Timer>
+          </div>
+        </div>
+        <div className="bg-deep-koamoru p-4 text-center text-3xl font-bold text-azureish-white tracking-widest">
+          {scrambledWord}
+        </div>
+        <div className="flex flex-col flex-grow overflow-y-scroll p-4">
+          {messages.map((message, index) => {
+            if(message.type === 'admin') return <AdminMessage message={message.msg} key={index} />
+            else if(message.type === 'user') return <Message key={index} message={message.msg} selfMessage={true} />
+            return <Message key={index} message={message.msg} />
+          })}
+        </div>
+        <form onSubmit={submitWord} className="bg-sage p-2 sm:p-3 sm:rounded-bl-md sm:rounded-br-md justify-self-end flex">
+          <input className="flex-grow pl-3" type="text" placeholder="Enter word here" value={pick} onChange={e => setPick(e.target.value)} required />
+          <button className="w-28 bg-deep-koamoru text-white font-bold rounded-tr-md rounded-br-md p-3 sm:p-2">SEND</button>
+        </form>
       </div>
-      <div>
-        Current word : <strong>{scrambledWord} </strong>
-      </div>
-      <div>
-        {messages.map((message, index) => {
-          if(message.type === 'admin') return <p key={index}>Admin message : {message.msg}</p>
-          else if(message.type === 'user') return <p key={index}>Your message : {message.msg}</p>
-          return <p key={index}>Opponent message : {message.msg}</p>
-        })}
-      </div>
-      <form onSubmit={submitWord}>
-        <input type="text" placeholder="Enter word here" value={pick} onChange={e => setPick(e.target.value)} />
-      </form>
     </div>
   )
 };
