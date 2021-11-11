@@ -1,4 +1,3 @@
-import './App.css';
 import { useEffect } from 'react'
 import { ConnectionContext, socket } from './connection';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
@@ -20,9 +19,6 @@ function App() {
           <Route path='/play' element={<Play />} />
         </Routes>
       </Router>
-      {/* <div className="App">
-        <p>Hey there</p>
-      </div> */}
     </ConnectionContext.Provider>
   );
 }
