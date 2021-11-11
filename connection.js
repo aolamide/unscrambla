@@ -21,6 +21,7 @@ module.exports = function(io) {
         io.to(gameCode).emit('gameReady', {host : result.game.hostName, playerTwo : result.game.playerTwoName });
         setTimeout(() => {
           io.to(gameCode).emit('gameStarted');
+          io.to(gameCode).emit('adminMessage',`Game is live. Unscramble the first word.`);
           setTimeout(() => {
             io.to(gameCode).emit('gameEnded', getGameResults(gameCode));
           }, 1000 * 60 * 2)
@@ -30,15 +31,15 @@ module.exports = function(io) {
       }
     });
 
-    socket.on('playerTry', ({ wordPick, gameCode }) => {
+    socket.on('playerTry', ({ wordPick, gameCode, userName }) => {
       socket.broadcast.to(gameCode).emit('opponentTry', wordPick);
       const result = guessWord(wordPick, gameCode , socket.id);
       if(result) {
-        io.to(gameCode).emit('adminMessage',`${wordPick} is correct. Great job!`);
+        io.to(gameCode).emit('adminMessage',`${wordPick} is correct. Great job ${userName}!✔`);
         io.to(gameCode).emit('newScrambledWord', getCurrentScrambledWord(gameCode) );
         io.to(gameCode).emit('scoreUpdate', getScores(gameCode));
       } else {
-        io.to(gameCode).emit('adminMessage' , `${wordPick} is wrong.`);
+        io.to(gameCode).emit('adminMessage' , `${wordPick} is wrong. Try again ${userName}❌`);
       }
     });
 
