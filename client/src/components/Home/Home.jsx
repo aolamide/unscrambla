@@ -3,17 +3,22 @@ import { Link, useNavigate } from 'react-router-dom'
 
 const Home = () => {
   const [code, setCode] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const submitCode = e => {
+    setError('');
     e.preventDefault();
+    if(!code) setError('Please enter game code.');
+    else if(code.split(' ')[1]) setError('No space in game codes.');
     navigate('/play?code=' + code);
   };
 
   return (
     <>
       <form onSubmit={submitCode} className="flex flex-col justify-center items-center bg-white rounded-md p-4 w-11/12 sm:w-96 shadow-md">
-        <input className="w-full rounded-md bg-transparent border-2 border-gray p-2 text-xl text-center font-bold appearance-none" type="tel" value={code} onChange={e => setCode(e.target.value)} name='code' placeholder="Enter game code" maxLength="6" required autoComplete="off" />
+        <input className="w-full rounded-md bg-transparent border-2 border-gray p-2 text-xl text-center font-bold appearance-none" type="tel" value={code} onChange={e => setCode(e.target.value.trim())} name='code' placeholder="Enter game code" maxLength="6" required autoComplete="off" />
+        <p className='text-red-600 text-sm font-bold'>{error}</p>
         <button className="text-brown-light rounded-md p-3 mt-3 font-bold w-full bg-black">Join Game</button>
       </form>
       <p className="font-bold m-2.5 text-white">OR</p>
