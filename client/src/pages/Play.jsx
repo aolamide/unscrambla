@@ -89,7 +89,7 @@ const Play = () => {
 
   if(loading) return <Loading />
   if(hostWaiting) return <HostWaiting code={gameCode} />;
-  if(gamePreparing) return <GamePreparing name={name} opponentName={playerTwoName} />
+  if(gamePreparing) return showLayout(<GamePreparing name={name} opponentName={playerTwoName} />)
   if(gameStarted) return <Game name={name} opponentName={playerTwoName} gameCode={gameCode} host={isHost} />
   if(gameEnded) return showLayout(<Result results={results} host={isHost} name={name} opponentName={playerTwoName} />)
   return showLayout(<NameForm host={isHost} gameCode={gameCode} />);
