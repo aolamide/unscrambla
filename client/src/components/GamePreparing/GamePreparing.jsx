@@ -11,7 +11,7 @@ const GamePreparing = ({ name, opponentName }) => {
   }, []);
 
   useEffect(() => {
-    if(countdown == 0) clearInterval(interval.current);
+    if(countdown === 0) clearInterval(interval.current);
   }, [countdown]);
 
   return (

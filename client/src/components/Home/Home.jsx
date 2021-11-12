@@ -5,7 +5,7 @@ const Home = () => {
   const [code, setCode] = useState('');
   const [error, setError] = useState('');
   const [gameError, setGameError] = useState('');
-  const [params, _] = useSearchParams();
+  const [params] = useSearchParams();
   const navigate = useNavigate();
 
   const submitCode = e => {

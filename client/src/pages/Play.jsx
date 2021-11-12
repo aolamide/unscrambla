@@ -27,7 +27,7 @@ const Play = () => {
   const [gameEnded, setGameEnded] = useState(false);
   const [replayWaiting, setReplayWaiting] = useState(false);
   const [results, setResults] = useState(null);
-  const [params, _] = useSearchParams();
+  const [params] = useSearchParams();
   const [playerDisconnected, setPlayerDisconnected] = useState(false);
   const socket = useContext(ConnectionContext);
   const navigate = useNavigate();
@@ -50,8 +50,6 @@ const Play = () => {
           setGameCode(code);
         } 
         else {
-          // alert(msg);
-          // navigate('/', { state : { error : msg }});
           navigate(`/?gameError=${msg}`)
         }
       })

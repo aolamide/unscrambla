@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 const ResultRow = ({ name, score, rank }) => {
   return (
-    <tr className={ rank == 1 ? `bg-deep-koamoru text-white` : ''}>
+    <tr className={ rank === 1 ? `bg-deep-koamoru text-white` : ''}>
       <td className="result-table-cell font-bold">#{rank}</td>
       <td className="result-table-cell">{name}</td>
       <td className="result-table-cell font-bold text-xl text-right">{score}</td>

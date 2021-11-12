@@ -12,7 +12,7 @@ const Layout = ({ children }) => {
           <Link className="bg-white w-10 h-10 rounded-full p-1 mr-4 flex items-center justify-center" title="How to play" to="/info">
             <img className="w-8 h-6" src={InfoIcon} alt="How to play" />
           </Link>
-          <a className="bg-white w-10 h-10 rounded-full p-1 mr-3" title="See project on GitHub" href="https://github.com/aolamide/unscrambla" target="_blank">
+          <a className="bg-white w-10 h-10 rounded-full p-1 mr-3" title="See project on GitHub" href="https://github.com/aolamide/unscrambla" target="_blank" rel="noopener noreferrer">
             <img className="w-8 h-8" src={GitHubIcon} alt="github" />
           </a>
         </div>
@@ -21,7 +21,7 @@ const Layout = ({ children }) => {
         {children}
       </div>
       <footer className="pb-4">
-        <p className="text-center text-white text-lg">Built with &hearts; by <a href="https://twitter.com/olamideaboyeji" className="text-azureish-white font-bold">Olamide.</a></p>
+        <p className="text-center text-white text-lg">Built with &hearts; by <a href="https://twitter.com/olamideaboyeji" className="text-azureish-white font-bold" target="_blank" rel="noopener noreferrer">Olamide.</a></p>
       </footer>
     </div>
   );
