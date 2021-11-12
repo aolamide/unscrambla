@@ -11,3 +11,7 @@
     margin: 0; 
   }
 }
+
+.result-table-cell {
+  @apply border border-purple-navy p-3
+}
