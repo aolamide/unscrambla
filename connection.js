@@ -26,7 +26,7 @@ module.exports = function(io) {
           io.to(gameCode).emit('adminMessage',`Game is live. Unscramble the first word.`);
           setTimeout(() => {
             io.to(gameCode).emit('gameEnded', getGameResults(gameCode));
-          }, 1000 * 60 * 2)
+          }, 1000 * 60 * 3)
         }, 10000);
       } else {
         socket.emit('checkCodeResult', result);
@@ -42,7 +42,7 @@ module.exports = function(io) {
           io.to(gameCode).emit('adminMessage',`Game is live. Unscramble the first word.`);
           setTimeout(() => {
             io.to(gameCode).emit('gameEnded', getGameResults(gameCode));
-          }, 1000 * 60 * 0.25)
+          }, 1000 * 60 * 3)
         }, 10000);
       }
     });

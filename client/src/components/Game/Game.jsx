@@ -63,7 +63,7 @@ const Game = ({ name, opponentName, gameCode, host }) => {
           </div>
           <div className="text-center text-3xl font-bold text-white">
             <Timer
-              initialTime={1000 * 60 * 2}
+              initialTime={1000 * 60 * 3}
               direction="backward"
             >
               <Timer.Minutes formatValue={(value) => `${(value < 10 ? ` 0${value}` : `${value}`)}`} /> :
