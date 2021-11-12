@@ -1,4 +1,4 @@
-const { createGame, checkCode, joinGame, guessWord, getCurrentScrambledWord, getScores, getGameResults, replayGame } = require("./helpers/game");
+const { createGame, checkCode, joinGame, guessWord, getCurrentScrambledWord, getScores, getGameResults, replayGame, deleteGame } = require("./helpers/game");
 
 module.exports = function(io) {
   io.on('connection', (socket) => {
@@ -6,6 +6,7 @@ module.exports = function(io) {
     socket.on('createGame', host => {
       const gameId = createGame(socket.id, host);
       socket.join(gameId);
+      socket.data.gameCode = gameId;
       socket.emit('gameCreated', gameId);
     });
     
@@ -16,6 +17,7 @@ module.exports = function(io) {
 
     socket.on('joinGame', ({ playerName, gameCode }) => {
       const result = joinGame(socket.id, playerName, gameCode);
+      socket.data.gameCode = gameCode;
       if(result.success) {
         socket.join(gameCode);
         io.to(gameCode).emit('gameReady', {host : result.game.hostName, playerTwo : result.game.playerTwoName });
@@ -40,7 +42,7 @@ module.exports = function(io) {
           io.to(gameCode).emit('adminMessage',`Game is live. Unscramble the first word.`);
           setTimeout(() => {
             io.to(gameCode).emit('gameEnded', getGameResults(gameCode));
-          }, 1000 * 60 * 2)
+          }, 1000 * 60 * 0.25)
         }, 10000);
       }
     });
@@ -60,5 +62,12 @@ module.exports = function(io) {
     socket.on('getScrambledWord', gameCode => {
       io.to(gameCode).emit('newScrambledWord', getCurrentScrambledWord(gameCode) );
     });
+
+    socket.on('disconnect', () => {
+      io.to(socket.data.gameCode).emit('playerDisconnected');
+      io.to(socket.data.gameCode).emit('gameEnded', getGameResults(socket.data.gameCode));
+      deleteGame(socket.data.gameCode);
+      io.socketsLeave(socket.data.gameCode);
+    })
   })
 }

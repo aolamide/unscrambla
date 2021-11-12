@@ -28,6 +28,7 @@ const Play = () => {
   const [replayWaiting, setReplayWaiting] = useState(false);
   const [results, setResults] = useState(null);
   const [params, _] = useSearchParams();
+  const [playerDisconnected, setPlayerDisconnected] = useState(false);
   const socket = useContext(ConnectionContext);
   const navigate = useNavigate();
 
@@ -73,6 +74,11 @@ const Play = () => {
       setGameStarted(false);
       setGameEnded(true);
     });
+    
+    socket.on('playerDisconnected', () => {
+      setGamePreparing(false);
+      setPlayerDisconnected(true);
+    });
 
     return (() => {
       socket.off('checkCodeResult');
@@ -80,6 +86,7 @@ const Play = () => {
       socket.off('gameReady');
       socket.off('gameStarted');
       socket.off('gameEnded');
+      socket.off('playerDisconnected');
     })
   }, []);
 
@@ -101,7 +108,7 @@ const Play = () => {
   if(hostWaiting) return showLayout(<HostWaiting code={gameCode} />);
   if(gamePreparing) return showLayout(<GamePreparing name={name} opponentName={playerTwoName} />)
   if(gameStarted) return <Game name={name} opponentName={playerTwoName} gameCode={gameCode} host={isHost} />
-  if(gameEnded) return showLayout(<Result onReplay={replayGame} results={results} host={isHost} name={name} opponentName={playerTwoName} />)
+  if(gameEnded) return showLayout(<Result onReplay={replayGame} results={results} host={isHost} name={name} opponentName={playerTwoName} disconnect={playerDisconnected} />)
   if(replayWaiting) return showLayout(<ReplayWaiting />)
   return showLayout(<NameForm host={isHost} gameCode={gameCode} />);
 }
