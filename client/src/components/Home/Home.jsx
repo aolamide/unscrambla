@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 
 const Home = () => {
   const [code, setCode] = useState('');
   const [error, setError] = useState('');
+  const [gameError, setGameError] = useState('');
+  const [params, _] = useSearchParams();
   const navigate = useNavigate();
 
   const submitCode = e => {
@@ -13,6 +15,17 @@ const Home = () => {
     else if(code.split(' ')[1]) setError('No space in game codes.');
     navigate('/play?code=' + code);
   };
+
+  useEffect(() => {
+    let gError = params.get('gameError');
+    if(gError) {
+      setGameError(gError);
+      setTimeout(() => {
+        setGameError('');
+        navigate('/');
+      }, 1500)
+    }
+  }, []);
 
   return (
     <>
@@ -25,6 +38,11 @@ const Home = () => {
       <Link to='/play'className="w-11/12 sm:w-96">
         <button className="text-deep-koamoru rounded-md p-3 mt-3 font-bold w-full shadow-md bg-azureish-white">HOST GAME</button>
       </Link>
+      {gameError && 
+        <div class="alert-toast fixed bottom-0 right-0 m-8 w-5/6 md:w-full max-w-sm bg-red-500 p-4 text-white animate-bounce">
+          {gameError}
+      </div>
+      }
     </>
   )
 }

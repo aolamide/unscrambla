@@ -50,8 +50,9 @@ const Play = () => {
           setGameCode(code);
         } 
         else {
-          alert(msg);
-          navigate('/');
+          // alert(msg);
+          // navigate('/', { state : { error : msg }});
+          navigate(`/?gameError=${msg}`)
         }
       })
     } else {
