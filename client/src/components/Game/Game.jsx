@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { ConnectionContext } from '../../connection'
 
 import Timer from 'react-compound-timer';
@@ -13,10 +13,11 @@ const Game = ({ name, opponentName, gameCode, host }) => {
   const [pick, setPick] = useState('');
   const [scrambledWord, setScrambledWord] = useState('');
   const socket = useContext(ConnectionContext);
+  const messagesElement = useRef(null);
 
   const submitWord = e => {
     e.preventDefault();
-    socket.emit('playerTry', { wordPick : pick, gameCode, userName : name });
+    socket.emit('playerTry', { wordPick : pick.toLowerCase(), gameCode, userName : name });
     setMessages(messages => [...messages, { type : 'user', msg : pick }]);
     setPick('');
   }
@@ -27,6 +28,7 @@ const Game = ({ name, opponentName, gameCode, host }) => {
     socket.on('adminMessage', msg => {
       const newMsg = { type : 'admin', msg };
       setMessages(currentMessages => [...currentMessages, newMsg]);
+      messagesElement.current.scrollTop = messagesElement.current.scrollHeight;
     });
     socket.on('opponentTry', msg => {
       const newMsg = { type : 'opponent', msg };
@@ -72,7 +74,7 @@ const Game = ({ name, opponentName, gameCode, host }) => {
         <div className="bg-deep-koamoru p-4 text-center text-3xl font-bold text-azureish-white tracking-widest">
           {scrambledWord}
         </div>
-        <div className="flex flex-col flex-grow overflow-y-scroll p-4">
+        <div className="flex flex-col flex-grow overflow-y-scroll p-4" ref={messagesElement}>
           {messages.map((message, index) => {
             if(message.type === 'admin') return <AdminMessage message={message.msg} key={index} />
             else if(message.type === 'user') return <Message key={index} message={message.msg} selfMessage={true} />
@@ -80,7 +82,7 @@ const Game = ({ name, opponentName, gameCode, host }) => {
           })}
         </div>
         <form onSubmit={submitWord} className="bg-sage p-2 sm:p-3 sm:rounded-bl-md sm:rounded-br-md justify-self-end flex">
-          <input className="flex-grow pl-3" type="text" placeholder="Enter word here" value={pick} onChange={e => setPick(e.target.value)} required />
+          <input className="flex-grow pl-3" type="text" placeholder="Enter word here" value={pick} onChange={e => setPick(e.target.value.trim())} required />
           <button className="w-28 bg-deep-koamoru text-white font-bold rounded-tr-md rounded-br-md p-3 sm:p-2">SEND</button>
         </form>
       </div>
