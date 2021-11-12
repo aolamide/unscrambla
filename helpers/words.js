@@ -1,23 +1,4 @@
-const words = [
-  'hello',
-  'welcome',
-  'freeze',
-  'parade',
-  'travel',
-  'stair',
-  'result',
-  'retail',
-  'educate',
-  'crate',
-  'charge',
-  'water',
-  'phone',
-  'cream',
-  'bucket',
-  'chart',
-  'police'
-];
-
+const words = require("./wordList");
 
 const getRandomWord = () => words[Math.floor(Math.random() * words.length)];
 
