@@ -25,7 +25,9 @@ module.exports = {
         '5-5/6' : '95%'
       },
       width : {
-        '120' : '30rem'
+        '120' : '30rem',
+        '188' : '47rem',
+        '200' : '50rem',
       },
       transitionDuration : {
         '2000' : '2000ms'

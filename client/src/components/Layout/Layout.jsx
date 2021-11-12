@@ -9,7 +9,7 @@ const Layout = ({ children }) => {
       <nav className="w-full p-4 flex justify-between">
         <Link className="font-cabin text-3xl font-bold text-azureish-white" to="/">Unscrambla</Link>
         <div className="flex">
-          <Link className="bg-white w-10 h-10 rounded-full p-1 mr-4 flex items-center justify-center" title="How to play" to="/">
+          <Link className="bg-white w-10 h-10 rounded-full p-1 mr-4 flex items-center justify-center" title="How to play" to="/info">
             <img className="w-8 h-6" src={InfoIcon} alt="How to play" />
           </Link>
           <a className="bg-white w-10 h-10 rounded-full p-1 mr-3" title="See project on GitHub" href="https://github.com/aolamide/unscrambla" target="_blank">
@@ -21,7 +21,7 @@ const Layout = ({ children }) => {
         {children}
       </div>
       <footer className="pb-4">
-        <p className="text-center text-white">Built with &hearts; by <a href="https://twitter.com/olamideaboyeji" className="text-azureish-white">Olamide.</a></p>
+        <p className="text-center text-white text-lg">Built with &hearts; by <a href="https://twitter.com/olamideaboyeji" className="text-azureish-white font-bold">Olamide.</a></p>
       </footer>
     </div>
   );

@@ -3,6 +3,7 @@ import { ConnectionContext, socket } from './connection';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import Home from './pages/Home';
 import Play from './pages/Play';
+import Info from './pages/Info';
 
 function App() {
   useEffect(() => {
@@ -17,6 +18,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/play' element={<Play />} />
+          <Route path='/info' element={<Info />} />
         </Routes>
       </Router>
     </ConnectionContext.Provider>

@@ -20,6 +20,17 @@
   @apply bg-sage p-2 w-4 h-4 rounded-full animate-bounce
 }
 
+.info-number {
+  @apply bg-deep-koamoru text-azureish-white font-bold w-6 h-6 rounded-full mr-3 flex justify-center items-center p-2;
+}
+
+.info-text {
+  @apply text-lg font-semibold text-deep-koamoru
+}
+.info-container {
+  @apply flex mt-6 items-center
+}
+
 .loader-circle.c1{
   animation-delay: 0.1s;
 }
