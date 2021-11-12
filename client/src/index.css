@@ -15,3 +15,17 @@
 .result-table-cell {
   @apply border border-purple-navy p-3
 }
+
+.loader-circle {
+  @apply bg-sage p-2 w-4 h-4 rounded-full animate-bounce
+}
+
+.loader-circle.c1{
+  animation-delay: 0.1s;
+}
+.loader-circle.c2{
+  animation-delay: 0.2s;
+}
+.loader-circle.c3{
+  animation-delay: 0.3s;
+}
