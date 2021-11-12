@@ -11,9 +11,10 @@ const initialGame = {
   hostScore : 0,
   playerTwoScore : 0,
   gameId : '',
-  gameHistory : [ { hostScore : 0, playerTwoScore : 0} ],
   currentWord : '',
-  currentScrambled : ''
+  currentScrambled : '',
+  hostReplay : false,
+  playerTwoReplay : false
 };
 
 const createGame = (host, hostName) => {
@@ -90,4 +91,20 @@ const getGameResults = gameCode => {
   return false;
 }
 
-module.exports = { createGame, checkCode, joinGame, games, guessWord, getCurrentScrambledWord, getScores, getGameResults }
+const replayGame = (gameCode, id) => {
+  const game = games[gameCode];
+  if(game) {
+    game.hostScore = 0;
+    game.playerTwoScore = 0;
+    if(game.host == id) game.hostReplay = true;
+    else if(game.playerTwo == id) game.playerTwoReplay = true;
+    if(game.playerTwoReplay && game.hostReplay) {
+      game.hostReplay = game.playerTwoReplay = false;
+      return { hostName : game.hostName, playerTwoName : game.playerTwoName };
+    };
+    return false;
+  }
+  return false;
+}
+
+module.exports = { createGame, checkCode, joinGame, games, guessWord, getCurrentScrambledWord, getScores, getGameResults, replayGame }

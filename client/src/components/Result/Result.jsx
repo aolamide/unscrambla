@@ -11,7 +11,7 @@ const ResultRow = ({ name, score, rank }) => {
   );
 }
 
-const Result = ({ results, host, name, opponentName }) => {
+const Result = ({ results, host, name, opponentName, onReplay  }) => {
   const [sortedResults, setSortedresults] = useState([]);
   useEffect(() => {
     let myResult = { score : host ? results?.hostScore : results?.playerTwoScore, name : name + ' (you)', rank : null };
@@ -45,7 +45,7 @@ const Result = ({ results, host, name, opponentName }) => {
         </tbody>
       </table>
     </div>
-    <button className="text-deep-koamoru rounded-md p-3 mt-5 font-bold w-11/12 sm:w-120 shadow-md bg-azureish-white">PLAY AGAIN</button>
+    <button onClick={onReplay} className="text-deep-koamoru rounded-md p-3 mt-5 font-bold w-11/12 sm:w-120 shadow-md bg-azureish-white">PLAY AGAIN</button>
     </>
   )
 };

@@ -8,6 +8,7 @@ import Game from '../components/Game/Game';
 import NameForm from '../components/NameForm/NameForm';
 import Result from '../components/Result/Result';
 import Layout from '../components/Layout/Layout';
+import ReplayWaiting from '../components/ReplayWaiting/ReplayWaiting';
 
 
 const showLayout = component => {
@@ -24,10 +25,18 @@ const Play = () => {
   const [gamePreparing, setGamePreparing] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
+  const [replayWaiting, setReplayWaiting] = useState(false);
   const [results, setResults] = useState(null);
   const [params, _] = useSearchParams();
   const socket = useContext(ConnectionContext);
   const navigate = useNavigate();
+
+
+  const replayGame = () => {
+    socket.emit('replay', gameCode);
+    setReplayWaiting(true);
+    setGameEnded(false)
+  };
 
   useEffect(() => {
     let code = params.get('code');
@@ -78,6 +87,7 @@ const Play = () => {
     socket.on('gameReady', ({ host, playerTwo }) => {
       setName(isHost ? host : playerTwo);
       setPlayerTwoName(isHost ? playerTwo : host);
+      setReplayWaiting(false);
       
       setHostWaiting(false);
       setGamePreparing(true);
@@ -91,7 +101,8 @@ const Play = () => {
   if(hostWaiting) return showLayout(<HostWaiting code={gameCode} />);
   if(gamePreparing) return showLayout(<GamePreparing name={name} opponentName={playerTwoName} />)
   if(gameStarted) return <Game name={name} opponentName={playerTwoName} gameCode={gameCode} host={isHost} />
-  if(gameEnded) return showLayout(<Result results={results} host={isHost} name={name} opponentName={playerTwoName} />)
+  if(gameEnded) return showLayout(<Result onReplay={replayGame} results={results} host={isHost} name={name} opponentName={playerTwoName} />)
+  if(replayWaiting) return showLayout(<ReplayWaiting />)
   return showLayout(<NameForm host={isHost} gameCode={gameCode} />);
 }
 

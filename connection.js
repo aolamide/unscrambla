@@ -1,4 +1,4 @@
-const { createGame, checkCode, joinGame, guessWord, getCurrentScrambledWord, getScores, getGameResults } = require("./helpers/game");
+const { createGame, checkCode, joinGame, guessWord, getCurrentScrambledWord, getScores, getGameResults, replayGame } = require("./helpers/game");
 
 module.exports = function(io) {
   io.on('connection', (socket) => {
@@ -28,6 +28,20 @@ module.exports = function(io) {
         }, 10000);
       } else {
         socket.emit('checkCodeResult', result);
+      }
+    });
+
+    socket.on('replay', gameCode  => {
+      const startReplay = replayGame(gameCode, socket.id);
+      if(startReplay) {
+        io.to(gameCode).emit('gameReady', {host : startReplay.hostName, playerTwo : startReplay.playerTwoName });
+        setTimeout(() => {
+          io.to(gameCode).emit('gameStarted');
+          io.to(gameCode).emit('adminMessage',`Game is live. Unscramble the first word.`);
+          setTimeout(() => {
+            io.to(gameCode).emit('gameEnded', getGameResults(gameCode));
+          }, 1000 * 60 * 2)
+        }, 10000);
       }
     });
 
