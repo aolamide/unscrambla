@@ -99,6 +99,9 @@ const replayGame = (gameCode, id) => {
     if(game.host == id) game.hostReplay = true;
     else if(game.playerTwo == id) game.playerTwoReplay = true;
     if(game.playerTwoReplay && game.hostReplay) {
+      const newWord = getRandomWord();
+      game.currentWord = newWord;
+      game.currentScrambled = scrambleWord(newWord);
       game.hostReplay = game.playerTwoReplay = false;
       return { hostName : game.hostName, playerTwoName : game.playerTwoName };
     };
