@@ -15,7 +15,7 @@ app.use(express.static(path.join(__dirname, 'client', 'build')));
 app.use(express.json());
 
 app.get('/games', (_, res) => {
-  let activeGames = { ...games };
+  let activeGames = JSON.parse(JSON.stringify(games));
   for(let game in activeGames) {
     delete activeGames[game].currentWord;
   };
