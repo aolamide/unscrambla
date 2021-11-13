@@ -14,9 +14,13 @@ require('./connection')(io);
 app.use(express.static(path.join(__dirname, 'client', 'build')));
 app.use(express.json());
 
-app.get('/games', (req, res) => {
-  res.json(games);
-})
+app.get('/games', (_, res) => {
+  let activeGames = { ...games };
+  for(let game in activeGames) {
+    delete activeGames[game].currentWord;
+  };
+  res.json(activeGames);
+});
 
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
