@@ -31,7 +31,7 @@ const checkCode = code => {
   const gameExists = games[code];
   if(gameExists && gameExists.playerTwo) return { success : false, msg : 'Game already has two players.'}
   else if(gameExists) return { success : true, game : gameExists }
-  else return { success : false, msg : 'Game not found'}
+  else return { success : false, msg : 'Game not found.'}
 }
 
 const joinGame = (playerId, playerName, game) => {
@@ -85,8 +85,8 @@ const getScores = gameCode => {
 const getGameResults = gameCode => {
   const game = games[gameCode];
   if(game) {
-    const { hostScore, playerTwoScore, gameHistory, currentWord } = game;
-    return { hostScore, playerTwoScore, gameHistory, currentWord }
+    const { hostScore, playerTwoScore, currentWord } = game;
+    return { hostScore, playerTwoScore, currentWord }
   }
   return false;
 }
