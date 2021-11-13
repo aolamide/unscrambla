@@ -13,7 +13,7 @@
 
 👤 **Olamide Aboyeji**
 
-* Website: aolamide.tech
+* Email: [me@aolamide.tech](mailto:aolamide.tech)
 * Twitter: [@olamideaboyeji](https://twitter.com/olamideaboyeji)
 * Github: [@aolamide](https://github.com/aolamide)
 * LinkedIn: [@aolamide](https://linkedin.com/in/aolamide)
