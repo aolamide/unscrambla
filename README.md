@@ -7,9 +7,9 @@
 
 > Unscrambla is an online multiplayer game where two players battle it out to see who can unscramble the most English words within three (3) minutes. Think you have what it takes? Challenge your friends now!
 
-### 🏠 [Homepage](https://unscrambla.herokuapp.com)
+### 🎮 [Play Now](https://unscrambla.herokuapp.com)
 
-## Author
+## Creator
 
 👤 **Olamide Aboyeji**
 
