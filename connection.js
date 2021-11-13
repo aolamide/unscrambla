@@ -17,8 +17,8 @@ module.exports = function(io) {
 
     socket.on('joinGame', ({ playerName, gameCode }) => {
       const result = joinGame(socket.id, playerName, gameCode);
-      socket.data.gameCode = gameCode;
       if(result.success) {
+        socket.data.gameCode = gameCode;
         socket.join(gameCode);
         io.to(gameCode).emit('gameReady', {host : result.game.hostName, playerTwo : result.game.playerTwoName });
         setTimeout(() => {
@@ -26,8 +26,8 @@ module.exports = function(io) {
           io.to(gameCode).emit('adminMessage',`Game is live. Unscramble the first word.`);
           setTimeout(() => {
             io.to(gameCode).emit('gameEnded', getGameResults(gameCode));
-          }, 1000 * 60 * 3)
-        }, 10000);
+          }, 1000 * 60 * 3) //3 minutes
+        }, 1000 * 10); //10 seconds
       } else {
         socket.emit('checkCodeResult', result);
       }
