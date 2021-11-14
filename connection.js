@@ -27,7 +27,7 @@ module.exports = function(io) {
           setTimeout(() => {
             io.to(gameCode).emit('gameEnded', getGameResults(gameCode));
           }, 1000 * 60 * 3) //3 minutes
-        }, 1000 * 10); //10 seconds
+        }, 1000 * 5); //5 seconds
       } else {
         socket.emit('checkCodeResult', result);
       }
@@ -43,7 +43,7 @@ module.exports = function(io) {
           setTimeout(() => {
             io.to(gameCode).emit('gameEnded', getGameResults(gameCode));
           }, 1000 * 60 * 3)
-        }, 10000);
+        }, 1000 * 5);
       }
     });
 

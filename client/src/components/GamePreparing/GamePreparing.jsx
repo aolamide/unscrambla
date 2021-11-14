@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 
 const GamePreparing = ({ name, opponentName }) => {
-  const [countdown, setCountDown] = useState(10);
+  const [countdown, setCountDown] = useState(5);
   let interval = useRef();
   useEffect(() => {
     interval.current = setInterval(() => {

@@ -21,7 +21,7 @@ const Info = () => {
         </div>
         <div className="info-container">
           <div className="info-number">4</div>
-          <div className="info-text">Players get 10 seconds to prepare.</div>
+          <div className="info-text">Players get 5 seconds to prepare.</div>
         </div>
         <div className="info-container">
           <div className="info-number">5</div>
