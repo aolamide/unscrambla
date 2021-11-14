@@ -79,6 +79,10 @@ const Play = () => {
       setPlayerDisconnected(true);
     });
 
+    socket.on('disconnect', () => {
+      navigate(`/?gameError=You were disconnected`);
+    });
+
     return (() => {
       socket.off('checkCodeResult');
       socket.off('gameCreated');
@@ -86,6 +90,7 @@ const Play = () => {
       socket.off('gameStarted');
       socket.off('gameEnded');
       socket.off('playerDisconnected');
+      socket.off('disconnect')
     })
   }, []);
 
