@@ -32,7 +32,7 @@ const Play = () => {
   const socket = useContext(ConnectionContext);
   const navigate = useNavigate();
 
-  Howler.volume(0.02);
+  Howler.volume(0.4);
   const playSound = () => {
     const sound = new Howl({
       src: ['/start.mp3']
