@@ -7,11 +7,13 @@ const NameForm = ({ host, gameCode }) => {
   const socket = useContext(ConnectionContext);
 
   const submitName = e => {
-    setError('');
     e.preventDefault();
-    if(!name) setError('Please enter your name');
-    else if(name.split(' ')[1]) setError('No space allowed in name');
-    else host ? socket.emit('createGame', name) : socket.emit('joinGame', { playerName : name, gameCode });
+    if(socket.connected) {
+      setError('');
+      if(!name) setError('Please enter your name');
+      else if(name.split(' ')[1]) setError('No space allowed in name');
+      else host ? socket.emit('createGame', name) : socket.emit('joinGame', { playerName : name, gameCode });
+    }
   }
 
   return (
