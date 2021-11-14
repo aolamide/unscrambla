@@ -9,7 +9,7 @@ import NameForm from '../components/NameForm/NameForm';
 import Result from '../components/Result/Result';
 import Layout from '../components/Layout/Layout';
 import ReplayWaiting from '../components/ReplayWaiting/ReplayWaiting';
-
+import {Howl, Howler} from 'howler';
 
 const showLayout = component => {
   return <Layout>{component}</Layout>
@@ -32,6 +32,13 @@ const Play = () => {
   const socket = useContext(ConnectionContext);
   const navigate = useNavigate();
 
+  const playSound = () => {
+    const sound = new Howl({
+      src: ['/start.mp3']
+    });
+    
+    sound.play();
+  }
 
   const replayGame = () => {
     socket.emit('replay', gameCode);
@@ -64,6 +71,7 @@ const Play = () => {
     socket.on('gameStarted', () => {
       setGamePreparing(false);
       setGameStarted(true);
+      playSound();
     });
 
     socket.on('gameEnded', result => {
@@ -102,6 +110,8 @@ const Play = () => {
       
       setHostWaiting(false);
       setGamePreparing(true);
+
+      playSound();
     });
     return (() => {
       socket.off('gameReady');
