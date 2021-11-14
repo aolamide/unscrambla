@@ -71,7 +71,7 @@ const Game = ({ name, opponentName, gameCode, host }) => {
             </Timer>
           </div>
         </div>
-        <div className="bg-deep-koamoru p-4 text-center text-3xl font-bold text-azureish-white tracking-widest">
+        <div className="bg-deep-koamoru p-4 text-center text-3xl font-bold text-azureish-white tracking-widest sticky top-0">
           {scrambledWord}
         </div>
         <div className="flex flex-col flex-grow overflow-y-scroll p-4" ref={messagesElement}>
