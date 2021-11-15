@@ -41,7 +41,7 @@ const Result = ({ results, host, name, opponentName, onReplay, disconnect  }) =>
           </tr>
         </thead>
         <tbody>
-          {sortedResults.length > 0 && sortedResults.map(res => <ResultRow name={res.name} score={res.score} rank={res.rank} />)}
+          {sortedResults.length > 0 && sortedResults.map((res, i) => <ResultRow name={res.name} score={res.score} rank={res.rank} key={i} />)}
         </tbody>
       </table>
     </div>

@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { ConnectionContext } from '../../connection'
+
 
 const Info = () => {
+  const socket = useContext(ConnectionContext);
+  useEffect(() => {
+    if(socket.connected) {
+      socket.disconnect();
+      setTimeout(() => {
+        socket.connect();
+      }, 150);
+    }
+  })
   return (
     <div className="bg-white rounded-md  w-11/12 md:w-188 mb-8 mt-8">
       <h1 className="text-azureish-white font-bold text-4xl text-center p-5 rounded-tl-md rounded-tr-md mb-5 bg-purple-navy">How to Play Unscrambla</h1>

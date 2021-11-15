@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { ConnectionContext } from '../../connection'
 
 const Home = () => {
   const [code, setCode] = useState('');
@@ -7,6 +8,7 @@ const Home = () => {
   const [gameError, setGameError] = useState('');
   const [params] = useSearchParams();
   const navigate = useNavigate();
+  const socket = useContext(ConnectionContext);
 
   const submitCode = e => {
     setError('');
@@ -17,6 +19,13 @@ const Home = () => {
   };
 
   useEffect(() => {
+    if(socket.connected) {
+      socket.disconnect();
+      setTimeout(() => {
+        socket.connect();
+      }, 500);
+    }
+    
     let gError = params.get('gameError');
     if(gError) {
       setGameError(gError);
@@ -39,7 +48,7 @@ const Home = () => {
         <button className="text-deep-koamoru rounded-md p-3 mt-3 font-bold w-full shadow-md bg-azureish-white">HOST GAME</button>
       </Link>
       {gameError && 
-        <div class="alert-toast fixed bottom-0 right-0 m-8 w-5/6 md:w-full max-w-sm bg-red-500 p-4 text-white animate-bounce">
+        <div className="alert-toast fixed bottom-0 right-0 m-8 w-5/6 md:w-full max-w-sm bg-red-500 p-4 text-white animate-bounce">
           {gameError}
       </div>
       }
