@@ -11,8 +11,15 @@ const io = require('socket.io')(server);
 require('./connection')(io);
 
 //middlewares
-app.use(express.static(path.join(__dirname, 'client', 'build')));
 app.use(express.json());
+app.use((req, res, next) => {
+  if (req.header('x-forwarded-proto') !== 'https') {
+    res.redirect(`https://${req.header('host')}${req.url}`)
+  } else {
+    next();
+  }
+});
+app.use(express.static(path.join(__dirname, 'client', 'build')));
 
 app.get('/games', (_, res) => {
   let activeGames = JSON.parse(JSON.stringify(games));
