@@ -65,6 +65,17 @@ const guessWord = (word, gameId, playerId) => {
   }
 }
 
+const updateWord = (gameId) => {
+  const game = games[gameId];
+  if(game) {
+    game.currentWord = game.currentScrambled = '';
+    const newWord = getRandomWord();
+    game.currentWord = newWord;
+    game.currentScrambled = scrambleWord(newWord);
+    return true
+  } else return false
+}
+
 const getCurrentScrambledWord = gameCode => {
   const game = games[gameCode];
   if(game) {
@@ -114,4 +125,4 @@ const deleteGame = gameCode => {
   delete games[gameCode] 
 };
 
-module.exports = { createGame, checkCode, joinGame, games, guessWord, getCurrentScrambledWord, getScores, getGameResults, replayGame, deleteGame }
+module.exports = { createGame, checkCode, joinGame, games, guessWord, getCurrentScrambledWord, updateWord, getScores, getGameResults, replayGame, deleteGame }

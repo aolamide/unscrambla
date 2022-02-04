@@ -1,6 +1,7 @@
-const { createGame, checkCode, joinGame, guessWord, getCurrentScrambledWord, getScores, getGameResults, replayGame, deleteGame } = require("./helpers/game");
+const { createGame, checkCode, joinGame, guessWord, getCurrentScrambledWord, getScores, getGameResults, replayGame, deleteGame, updateWord } = require("./helpers/game");
 
 module.exports = function(io) {
+  let interval = null;
   io.on('connection', (socket) => {
 
     socket.on('createGame', host => {
@@ -24,8 +25,13 @@ module.exports = function(io) {
         setTimeout(() => {
           io.to(gameCode).emit('gameStarted');
           io.to(gameCode).emit('adminMessage',`Game is live. Unscramble the first word.`);
+          interval = setInterval(() => {
+            updateWord(gameCode);
+            io.to(gameCode).emit('newScrambledWord', getCurrentScrambledWord(gameCode) );
+          }, 45000); //change word after 45 seconds if no player guesses it
           setTimeout(() => {
             io.to(gameCode).emit('gameEnded', getGameResults(gameCode));
+            clearInterval(interval);
           }, 1000 * 60 * 3) //3 minutes
         }, 1000 * 5); //5 seconds
       } else {
@@ -53,6 +59,13 @@ module.exports = function(io) {
       if(result) {
         io.to(gameCode).emit('adminMessage',`${wordPick} is correct. Great job ${userName}!✔`);
         io.to(gameCode).emit('newScrambledWord', getCurrentScrambledWord(gameCode) );
+        if(interval){
+          clearInterval(interval);
+        }
+        interval = setInterval(() => {
+          updateWord(gameCode);
+          io.to(gameCode).emit('newScrambledWord', getCurrentScrambledWord(gameCode) );
+        }, 45000); //change word after 45 seconds if no player guesses it
         io.to(gameCode).emit('scoreUpdate', getScores(gameCode));
       } else {
         io.to(gameCode).emit('adminMessage' , `${wordPick} is wrong. Try again ${userName}❌`);
