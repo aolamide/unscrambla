@@ -1,3 +1,4 @@
+const Game = require('../model/game');
 const getGameId = require('./gameId');
 const { getRandomWord, scrambleWord } = require('./words');
 
@@ -97,6 +98,7 @@ const getGameResults = gameCode => {
   const game = games[gameCode];
   if(game) {
     const { hostScore, playerTwoScore, currentWord } = game;
+    saveGameToDatabase(game);
     return { hostScore, playerTwoScore, currentWord }
   }
   return false;
@@ -125,4 +127,13 @@ const deleteGame = gameCode => {
   delete games[gameCode] 
 };
 
-module.exports = { createGame, checkCode, joinGame, games, guessWord, getCurrentScrambledWord, updateWord, getScores, getGameResults, replayGame, deleteGame }
+const saveGameToDatabase = async (game) => {
+  try {
+    const newGame = new Game(game);
+    await newGame.save()
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+module.exports = { createGame, checkCode, joinGame, games, guessWord, getCurrentScrambledWord, updateWord, getScores, getGameResults, replayGame, deleteGame, saveGameToDatabase }
