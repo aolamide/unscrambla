@@ -5,14 +5,15 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "build-client" : "(cd client && npm run build) && (git add ./ && git commit -m \"updated client build\")",
-    "start" : "node server.js"
+    "build-client": "(cd client && npm run build) && (git add ./ && git commit -m \"updated client build\")",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "mongoose": "^6.2.1",
     "socket.io": "^4.3.2"
   },
   "devDependencies": {

@@ -1,6 +1,8 @@
 const http = require('http');
 const path = require('path');
 const express = require('express');
+const mongoose = require('mongoose')
+const Game = require('./model/game');
 const { games } = require('./helpers/game');
 
 const app = express();
@@ -9,6 +11,18 @@ const server = http.createServer(app);
 const io = require('socket.io')(server);
 
 require('./connection')(io);
+
+//db
+const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost/Unscrambla"
+mongoose.connect(MONGO_URI, { 
+	useNewUrlParser: true,
+	useUnifiedTopology: true
+	})
+	.then(() => console.log('DB Connected'));
+
+mongoose.connection.on('error', err => {
+	console.log(`DB connection error: ${err.message}`)
+});
 
 //middlewares
 app.use(express.json());
@@ -21,13 +35,22 @@ app.use((req, res, next) => {
 });
 app.use(express.static(path.join(__dirname, 'client', 'build')));
 
-app.get('/games', (_, res) => {
+app.get('/games/live', (_, res) => {
   let activeGames = JSON.parse(JSON.stringify(games));
   for(let game in activeGames) {
     delete activeGames[game].currentWord;
   };
   res.json(activeGames);
 });
+
+app.get('/games', async (req, res) => {
+  try{
+    let games = await Game.find();
+    return res.json(games);
+  } catch (err) {
+    console.log(err)
+  }
+})
 
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
