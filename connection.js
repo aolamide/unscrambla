@@ -28,7 +28,7 @@ module.exports = function(io) {
           interval = setInterval(() => {
             updateWord(gameCode);
             io.to(gameCode).emit('newScrambledWord', getCurrentScrambledWord(gameCode) );
-          }, 45000); //change word after 45 seconds if no player guesses it
+          }, 30 * 1000); //change word after 30 seconds if no player guesses it
           setTimeout(() => {
             io.to(gameCode).emit('gameEnded', getGameResults(gameCode));
             clearInterval(interval);
@@ -50,8 +50,13 @@ module.exports = function(io) {
         setTimeout(() => {
           io.to(gameCode).emit('gameStarted');
           io.to(gameCode).emit('adminMessage',`Game is live. Unscramble the first word.`);
+          interval = setInterval(() => {
+            updateWord(gameCode);
+            io.to(gameCode).emit('newScrambledWord', getCurrentScrambledWord(gameCode) );
+          }, 30 * 1000); //change word after 30 seconds if no player guesses it
           setTimeout(() => {
             io.to(gameCode).emit('gameEnded', getGameResults(gameCode));
+            clearInterval(interval);
           }, 1000 * 60 * 3)
         }, 1000 * 5);
       }
@@ -69,7 +74,7 @@ module.exports = function(io) {
         interval = setInterval(() => {
           updateWord(gameCode);
           io.to(gameCode).emit('newScrambledWord', getCurrentScrambledWord(gameCode) );
-        }, 45000); //change word after 45 seconds if no player guesses it
+        }, 30 * 1000); //change word after 30 seconds if no player guesses it
         io.to(gameCode).emit('scoreUpdate', getScores(gameCode));
       } else {
         io.to(gameCode).emit('adminMessage' , `${wordPick} is wrong. Try again ${userName}❌`);

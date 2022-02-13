@@ -39,6 +39,7 @@ const checkCode = code => {
 const joinGame = (playerId, playerName, game) => {
   const checkGame = checkCode(game);
   if(checkGame.success) {
+    if(checkGame.game.hostName.toLowerCase() === playerName.toLowerCase()) return { success : false, nameClash : true }
     checkGame.game.playerTwo = playerId;
     checkGame.game.playerTwoName = playerName;
     const startWord = getRandomWord();
