@@ -15,7 +15,8 @@ const initialGame = {
   currentWord : '',
   currentScrambled : '',
   hostReplay : false,
-  playerTwoReplay : false
+  playerTwoReplay : false,
+  gameLive : false
 };
 
 const createGame = (host, hostName) => {
@@ -43,6 +44,7 @@ const joinGame = (playerId, playerName, game) => {
     const startWord = getRandomWord();
     checkGame.game.currentWord = startWord;
     checkGame.game.currentScrambled = scrambleWord(startWord);
+    checkGame.game.gameLive = true;
     return { success : true, game : checkGame.game };
   } else {
     return checkGame;
@@ -98,7 +100,10 @@ const getGameResults = gameCode => {
   const game = games[gameCode];
   if(game) {
     const { hostScore, playerTwoScore, currentWord } = game;
-    saveGameToDatabase(game);
+    if(game.gameLive) {
+      saveGameToDatabase(game);
+    }
+    game.gameLive = false;
     return { hostScore, playerTwoScore, currentWord }
   }
   return false;
@@ -112,6 +117,7 @@ const replayGame = (gameCode, id) => {
     if(game.playerTwoReplay && game.hostReplay) {
       game.hostScore = 0;
       game.playerTwoScore = 0;
+      game.gameLive = true;
       const newWord = getRandomWord();
       game.currentWord = newWord;
       game.currentScrambled = scrambleWord(newWord);
