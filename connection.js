@@ -35,7 +35,11 @@ module.exports = function(io) {
           }, 1000 * 60 * 3) //3 minutes
         }, 1000 * 5); //5 seconds
       } else {
-        socket.emit('checkCodeResult', result);
+        if(result.nameClash) {
+          socket.emit('nameClash');
+        } else {
+          socket.emit('checkCodeResult', result);
+        }
       }
     });
 

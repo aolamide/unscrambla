@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { ConnectionContext } from '../../connection'
 
 const NameForm = ({ host, gameCode }) => {
@@ -15,6 +15,12 @@ const NameForm = ({ host, gameCode }) => {
       else host ? socket.emit('createGame', name) : socket.emit('joinGame', { playerName : name, gameCode });
     }
   }
+  useEffect(() => {
+    socket.on('nameClash', () => setError('Nickname already used, please use a different name.'))
+    return () => {
+      socket.off('nameClash')
+    }
+  }, [])
 
   return (
     <>

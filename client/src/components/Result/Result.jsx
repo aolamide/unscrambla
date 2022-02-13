@@ -14,7 +14,7 @@ const ResultRow = ({ name, score, rank }) => {
 const Result = ({ results, host, name, opponentName, onReplay, disconnect  }) => {
   const [sortedResults, setSortedresults] = useState([]);
   useEffect(() => {
-    let myResult = { score : host ? results?.hostScore : results?.playerTwoScore, name : name + ' (you)', rank : null };
+    let myResult = { score : host ? results?.hostScore : results?.playerTwoScore, name : name, rank : null };
     let opponentResult = { score : host ?  results?.playerTwoScore : results?.hostScore, name : opponentName, rank : null };
     let sort = [myResult, opponentResult];
     if(myResult.score > opponentResult.score) {
