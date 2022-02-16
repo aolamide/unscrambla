@@ -16,7 +16,8 @@ const initialGame = {
   currentScrambled : '',
   hostReplay : false,
   playerTwoReplay : false,
-  gameLive : false
+  gameLive : false,
+  skippedWords : []
 };
 
 const createGame = (host, hostName) => {
@@ -72,6 +73,7 @@ const guessWord = (word, gameId, playerId) => {
 const updateWord = (gameId) => {
   const game = games[gameId];
   if(game) {
+    game.skippedWords.push({ scrambled : game.currentScrambled, word : game.currentWord});
     game.currentWord = game.currentScrambled = '';
     const newWord = getRandomWord();
     game.currentWord = newWord;
@@ -100,12 +102,13 @@ const getScores = gameCode => {
 const getGameResults = gameCode => {
   const game = games[gameCode];
   if(game) {
-    const { hostScore, playerTwoScore, currentWord } = game;
+    const { hostScore, playerTwoScore, currentWord, skippedWords } = game;
     if(game.gameLive) {
       saveGameToDatabase(game);
     }
     game.gameLive = false;
-    return { hostScore, playerTwoScore, currentWord }
+    game.skippedWords = [];
+    return { hostScore, playerTwoScore, currentWord, skippedWords }
   }
   return false;
 }

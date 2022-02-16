@@ -49,6 +49,8 @@ const Result = ({ results, host, name, opponentName, onReplay, disconnect  }) =>
     <p className="text-azureish-white text-center mt-5">Opponent disconnected</p> : 
     <>
       <p className="text-azureish-white">Last word was <span className="font-bold text-2xl mt-1">{results.currentWord}</span></p>
+      <p className='text-azureish-white text-center font-bold underline mt-2'>SKIPPED WORDS :</p>
+      {results.skippedWords.map((entry) => <p className="font-bold text-xl mt-1 text-center text-azureish-white">{entry.scrambled} {'-->'} {entry.word} </p>)}
       <button onClick={onReplay} className="text-deep-koamoru rounded-md p-3 mt-5 font-bold w-11/12 sm:w-120 shadow-md bg-azureish-white">PLAY AGAIN</button>
     </>
     }
