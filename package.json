@@ -1,12 +1,12 @@
 {
   "name": "unscrambla",
   "version": "1.0.0",
-  "description": "",
+  "description": "Uncrambla application",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/server.ts",
+    "start:dev": "nodemon src/server.ts",
     "build-client": "(cd client && npm run build) && (git add ./ && git commit -m \"updated client build\")",
-    "start": "node src/server.ts",
+    "start": "node dist/server",
     "lint": "eslint \"src/**/*.ts\" --fix",
     "format": "prettier --write \"src/**/*.ts\""
   },
