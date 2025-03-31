@@ -4,19 +4,43 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon server.js",
+    "dev": "nodemon src/server.ts",
     "build-client": "(cd client && npm run build) && (git add ./ && git commit -m \"updated client build\")",
-    "start": "node server.js"
+    "start": "node src/server.ts",
+    "lint": "eslint \"src/**/*.ts\" --fix",
+    "format": "prettier --write \"src/**/*.ts\""
   },
   "keywords": [],
-  "author": "",
+  "author": "Olamide Aboyeji",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
-    "mongoose": "^6.2.1",
-    "socket.io": "^4.3.2"
+    "express": "^5.1.0",
+    "mongoose": "^8.13.1",
+    "socket.io": "^4.8.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.14"
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
+    "@types/express": "^5.0.1",
+    "@types/mongoose": "^5.11.96",
+    "@types/node": "^22.13.14",
+    "@types/react": "^19.0.12",
+    "@types/react-dom": "^19.0.4",
+    "eslint": "^9.23.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-prettier": "^5.2.5",
+    "globals": "^16.0.0",
+    "lint-staged": "^15.5.0",
+    "nodemon": "^3.1.9",
+    "prettier": "^3.5.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.28.0"
+  },
+  "lint-staged": {
+    "**/*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }
