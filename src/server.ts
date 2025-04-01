@@ -25,14 +25,12 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost/Unscrambla';
 
 //middlewares
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/games', gameRouter);
 
 app.get('*path', function (req: Request, res: Response) {
-  return res.sendFile(
-    path.join(__dirname, '..', 'client', 'build', 'index.html'),
-  );
+  return res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 const PORT = Number(process.env.PORT) || 4000;
