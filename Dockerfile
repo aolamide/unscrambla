@@ -1,8 +1,8 @@
 # Stage 1: Build React client
-FROM node:16-alpine AS client-builder
+FROM node:22-alpine AS client-builder
 WORKDIR /app
 COPY client/package*.json ./
-RUN npm ci --legacy-peer-deps
+RUN npm ci
 COPY client/ ./
 RUN npm run build
 
