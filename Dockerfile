@@ -2,7 +2,7 @@
 FROM node:16-alpine AS client-builder
 WORKDIR /app
 COPY client/package*.json ./
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 COPY client/ ./
 RUN npm run build
 
