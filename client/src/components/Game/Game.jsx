@@ -29,12 +29,17 @@ const Game = ({ name, opponentName, gameCode, host }) => {
   };
 
   useEffect(() => {
+    if (messagesElement.current) {
+      messagesElement.current.scrollTop = messagesElement.current.scrollHeight;
+    }
+  }, [messages]);
+
+  useEffect(() => {
     socket.emit('getScrambledWord', gameCode);
 
     socket.on('adminMessage', (msg) => {
       const newMsg = { type: 'admin', msg };
       setMessages((currentMessages) => [...currentMessages, newMsg]);
-      messagesElement.current.scrollTop = messagesElement.current.scrollHeight;
     });
     socket.on('opponentTry', (msg) => {
       const newMsg = { type: 'opponent', msg };
@@ -58,33 +63,37 @@ const Game = ({ name, opponentName, gameCode, host }) => {
   }, []);
 
   return (
-    <div className="bg-brown-light h-screen flex items-center justify-center">
-      <div className="w-full sm:w-8/12 md:max-w-4xl h-full sm:h-5-5/6 bg-gray rounded-md flex flex-col shadow-xl">
-        <div className="bg-sage p-3 sm:rounded-tl-md sm:rounded-tr-md">
-          <h1 className="font-cabin text-center text-white text-3xl mb-2">
-            Unscrambla
+    <div className="bg-gradient-to-br from-deep-koamoru/100 to-deep-koamoru/90 flex items-center justify-center h-screen">
+      <div className="w-full sm:w-8/12 md:max-w-4xl h-full sm:h-5-5/6 bg-white/10 backdrop-blur-lg rounded-xl shadow-lg p-6 border border-white/20 flex flex-col">
+        <div className="flex flex-col md:flex-row justify-between items-center pb-4 border-b border-white/20">
+          <h1 className="font-cabin text-2xl font-extrabold text-white tracking-wider">
+            <img alt="Unscrambla" className="w-20" src="/unscrambla.svg" />
           </h1>
-          <div className="flex justify-between">
-            <GameScores name={name} type={'you'} score={score} />
-            <div className="font-extrabold flex-grow text-center">vs</div>
+          <div className="flex items-center space-x-6">
+            <GameScores type={'player'} score={score} name={name} />
+            <span className="text-azureish-white text-xl">vs</span>
             <GameScores
-              name={opponentName}
               type={'opponent'}
               score={opponentScore}
+              name={opponentName}
             />
           </div>
-          <div className="text-center text-3xl font-bold text-white">
-            <div>
-              {minutes < 10 ? `0${minutes}` : minutes} :{' '}
-              {seconds < 10 ? `0${seconds}` : seconds}
-            </div>
+        </div>
+
+        <div className="text-center my-6">
+          <div
+            className={`text-3xl font-bold ${minutes === 0 && seconds <= 30 ? 'text-red-500 animate-bounce' : 'text-yellow-400 animate-pulse'}`}
+          >
+            {minutes < 10 ? `0${minutes}` : minutes} :{' '}
+            {seconds < 10 ? `0${seconds}` : seconds}
+          </div>
+          <div className="mt-4 bg-white/10 p-5 rounded-lg text-2xl font-semibold tracking-[0.3em] text-white shadow-lg">
+            {scrambledWord}
           </div>
         </div>
-        <div className="bg-deep-koamoru p-4 text-center text-3xl font-bold text-azureish-white tracking-widest">
-          {scrambledWord}
-        </div>
+
         <div
-          className="flex flex-col flex-grow overflow-y-scroll p-4"
+          className="overflow-y-scroll flex flex-col flex-grow bg-white/10 p-4 rounded-lg space-y-2 border border-white/20 shadow-inner"
           ref={messagesElement}
         >
           {messages.map((message, index) => {
@@ -97,19 +106,17 @@ const Game = ({ name, opponentName, gameCode, host }) => {
             return <Message key={index} message={message.msg} />;
           })}
         </div>
-        <form
-          onSubmit={submitWord}
-          className="bg-sage p-2 sm:p-3 sm:rounded-bl-md sm:rounded-br-md justify-self-end flex"
-        >
+
+        <form onSubmit={submitWord} className="mt-4 flex items-center">
           <input
-            className="flex-grow pl-3"
             type="text"
-            placeholder="Enter word here"
             value={pick}
             onChange={(e) => setPick(e.target.value.trim())}
             required
+            placeholder="Enter word here"
+            className="flex-1 p-3 bg-white/10 text-white rounded-lg focus:ring-2 focus:ring-azureish-white outline-none shadow-lg placeholder-gray-400"
           />
-          <button className="w-28 bg-deep-koamoru text-white font-bold rounded-tr-md rounded-br-md p-3 sm:p-2">
+          <button className="ml-3 bg-azureish-white text-black px-6 py-3 rounded-lg font-bold hover:bg-deep-koamoru hover:text-white transition-all shadow-lg">
             SEND
           </button>
         </form>

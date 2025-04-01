@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { ConnectionContext } from '../connection';
-import { useSearchParams, useNavigate } from 'react-router-dom'
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import Loading from '../components/Loading/Loading';
 import HostWaiting from '../components/HostWaiting/HostWaiting';
 import GamePreparing from '../components/GamePreparing/GamePreparing';
@@ -9,11 +9,11 @@ import NameForm from '../components/NameForm/NameForm';
 import Result from '../components/Result/Result';
 import Layout from '../components/Layout/Layout';
 import ReplayWaiting from '../components/ReplayWaiting/ReplayWaiting';
-import {Howl, Howler} from 'howler';
+import { Howl, Howler } from 'howler';
 
-const showLayout = component => {
-  return <Layout>{component}</Layout>
-}
+const showLayout = (component) => {
+  return <Layout>{component}</Layout>;
+};
 
 const Play = () => {
   const [loading, setLoading] = useState(true);
@@ -35,54 +35,53 @@ const Play = () => {
   Howler.volume(0.4);
   const playSound = () => {
     const sound = new Howl({
-      src: ['/start.mp3']
+      src: ['/start.mp3'],
     });
-    
+
     sound.play();
-  }
+  };
 
   const replayGame = () => {
     socket.emit('replay', gameCode);
     setReplayWaiting(true);
-    setGameEnded(false)
+    setGameEnded(false);
   };
 
   useEffect(() => {
     let code = params.get('code');
-    if(code) {
+    if (code) {
       setIsHost(false);
       socket.emit('checkCode', code);
       socket.on('checkCodeResult', ({ success, msg }) => {
-        if(success) {
+        if (success) {
           setLoading(false);
           setGameCode(code);
-        } 
-        else {
-          navigate(`/?gameError=${msg}`)
+        } else {
+          navigate(`/?gameError=${msg}`);
         }
-      })
+      });
     } else {
       setLoading(false);
     }
-    socket.on('gameCreated', gameId => {
+    socket.on('gameCreated', (gameId) => {
       setGameCode(gameId);
       setHostWaiting(true);
     });
-    
+
     socket.on('gameStarted', () => {
       setGamePreparing(false);
       setGameStarted(true);
       playSound();
     });
 
-    socket.on('gameEnded', result => {
-      if(result) {
+    socket.on('gameEnded', (result) => {
+      if (result) {
         setResults(result);
       }
       setGameStarted(false);
       setGameEnded(true);
     });
-    
+
     socket.on('playerDisconnected', () => {
       setGamePreparing(false);
       setPlayerDisconnected(true);
@@ -92,15 +91,15 @@ const Play = () => {
       navigate(`/?gameError=You were disconnected`);
     });
 
-    return (() => {
+    return () => {
       socket.off('checkCodeResult');
       socket.off('gameCreated');
       socket.off('gameReady');
       socket.off('gameStarted');
       socket.off('gameEnded');
       socket.off('playerDisconnected');
-      socket.off('disconnect')
-    })
+      socket.off('disconnect');
+    };
   }, []);
 
   useEffect(() => {
@@ -108,24 +107,45 @@ const Play = () => {
       setName(isHost ? host : playerTwo);
       setPlayerTwoName(isHost ? playerTwo : host);
       setReplayWaiting(false);
-      
+
       setHostWaiting(false);
       setGamePreparing(true);
 
       playSound();
     });
-    return (() => {
+    return () => {
       socket.off('gameReady');
-    })
+    };
   }, [isHost]);
 
-  if(loading) return <Loading />
-  if(hostWaiting) return showLayout(<HostWaiting code={gameCode} />);
-  if(gamePreparing) return showLayout(<GamePreparing name={name} opponentName={playerTwoName} />)
-  if(gameStarted) return <Game name={name} opponentName={playerTwoName} gameCode={gameCode} host={isHost} />
-  if(gameEnded) return showLayout(<Result onReplay={replayGame} results={results} host={isHost} name={name} opponentName={playerTwoName} disconnect={playerDisconnected} />)
-  if(replayWaiting) return showLayout(<ReplayWaiting />)
+  if (loading) return <Loading />;
+  if (hostWaiting) return showLayout(<HostWaiting code={gameCode} />);
+  if (gamePreparing)
+    return showLayout(
+      <GamePreparing name={name} opponentName={playerTwoName} />,
+    );
+  if (gameStarted)
+    return (
+      <Game
+        name={name}
+        opponentName={playerTwoName}
+        gameCode={gameCode}
+        host={isHost}
+      />
+    );
+  if (gameEnded)
+    return showLayout(
+      <Result
+        onReplay={replayGame}
+        results={results}
+        host={isHost}
+        name={name}
+        opponentName={playerTwoName}
+        disconnect={playerDisconnected}
+      />,
+    );
+  if (replayWaiting) return showLayout(<ReplayWaiting />);
   return showLayout(<NameForm host={isHost} gameCode={gameCode} />);
-}
+};
 
 export default Play;
