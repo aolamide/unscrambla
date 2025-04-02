@@ -5,19 +5,35 @@ import GameScores from '../GameScores/GameScores';
 import AdminMessage from '../Messages/AdminMessage';
 import Message from '../Messages/Message';
 
-const Game = ({ name, opponentName, gameCode, host }) => {
+export interface IGameProps {
+  name: string;
+  opponentName: string;
+  gameCode: string;
+  host: boolean;
+}
+export interface IGameState {
+  score: number;
+  opponentScore: number;
+  messages: Array<{ type: string; msg: string }>;
+  pick: string;
+  scrambledWord: string;
+}
+
+const Game = ({ name, opponentName, gameCode, host }: IGameProps) => {
   const { seconds, minutes } = useTimer({
     expiryTimestamp: new Date(Date.now() + 1000 * 60 * 3),
   });
-  const [score, setScore] = useState(0);
-  const [opponentScore, setOpponentScore] = useState(0);
-  const [messages, setMessages] = useState([]);
-  const [pick, setPick] = useState('');
-  const [scrambledWord, setScrambledWord] = useState('');
+  const [score, setScore] = useState<IGameState['score']>(0);
+  const [opponentScore, setOpponentScore] =
+    useState<IGameState['opponentScore']>(0);
+  const [messages, setMessages] = useState<IGameState['messages']>([]);
+  const [pick, setPick] = useState<IGameState['pick']>('');
+  const [scrambledWord, setScrambledWord] =
+    useState<IGameState['scrambledWord']>('');
   const socket = useContext(ConnectionContext);
-  const messagesElement = useRef(null);
+  const messagesElement = useRef<HTMLDivElement>(null);
 
-  const submitWord = (e) => {
+  const submitWord = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     socket.emit('playerTry', {
       wordPick: pick.toLowerCase(),
