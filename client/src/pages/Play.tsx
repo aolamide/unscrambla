@@ -11,7 +11,7 @@ import Layout from '../components/Layout/Layout';
 import ReplayWaiting from '../components/ReplayWaiting/ReplayWaiting';
 import { Howl, Howler } from 'howler';
 
-const showLayout = (component) => {
+const showLayout = (component: React.ReactNode) => {
   return <Layout>{component}</Layout>;
 };
 
@@ -26,7 +26,7 @@ const Play = () => {
   const [gameStarted, setGameStarted] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
   const [replayWaiting, setReplayWaiting] = useState(false);
-  const [results, setResults] = useState(null);
+  const [results, setResults] = useState(undefined);
   const [params] = useSearchParams();
   const [playerDisconnected, setPlayerDisconnected] = useState(false);
   const socket = useContext(ConnectionContext);

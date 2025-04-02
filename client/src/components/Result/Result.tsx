@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
-const ResultRow = ({ name, score, rank }) => {
+export interface IResultRowProps {
+  name: string;
+  score: number;
+  rank: number;
+}
+
+const ResultRow = ({ name, score, rank }: IResultRowProps) => {
   return (
     <tr className={rank === 1 ? `bg-deep-koamoru text-white` : ''}>
       <td className="result-table-cell font-bold">#{rank}</td>
@@ -12,6 +18,27 @@ const ResultRow = ({ name, score, rank }) => {
   );
 };
 
+export interface IResultProps {
+  results?: {
+    hostScore: number;
+    playerTwoScore: number;
+    currentWord: string;
+    skippedWords: Array<{ word: string; scrambled: string }>;
+    rank?: number;
+  };
+  host: boolean;
+  name: string;
+  opponentName: string;
+  onReplay: () => void;
+  disconnect?: boolean;
+}
+
+type UserResult = {
+  score?: number;
+  name: string;
+  rank: number;
+};
+
 const Result = ({
   results,
   host,
@@ -19,29 +46,31 @@ const Result = ({
   opponentName,
   onReplay,
   disconnect,
-}) => {
-  const [sortedResults, setSortedresults] = useState([]);
+}: IResultProps) => {
+  const [sortedResults, setSortedresults] = useState<UserResult[]>([]);
   useEffect(() => {
-    let myResult = {
+    let myResult: UserResult = {
       score: host ? results?.hostScore : results?.playerTwoScore,
       name: name,
-      rank: null,
+      rank: 1,
     };
-    let opponentResult = {
+    let opponentResult: UserResult = {
       score: host ? results?.playerTwoScore : results?.hostScore,
       name: opponentName,
-      rank: null,
+      rank: 1,
     };
     let sort = [myResult, opponentResult];
-    if (myResult.score > opponentResult.score) {
-      myResult.rank = 1;
-      opponentResult.rank = 2;
-      sort = [myResult, opponentResult];
-    } else if (myResult.score < opponentResult.score) {
-      myResult.rank = 2;
-      opponentResult.rank = 1;
-      sort = [opponentResult, myResult];
-    } else myResult.rank = opponentResult.rank = 1;
+    if (myResult.score && opponentResult.score) {
+      if (myResult.score > opponentResult.score) {
+        myResult.rank = 1;
+        opponentResult.rank = 2;
+        sort = [myResult, opponentResult];
+      } else if (myResult.score < opponentResult.score) {
+        myResult.rank = 2;
+        opponentResult.rank = 1;
+        sort = [opponentResult, myResult];
+      }
+    }
     setSortedresults(sort);
   }, []);
   return (
@@ -61,7 +90,7 @@ const Result = ({
               sortedResults.map((res, i) => (
                 <ResultRow
                   name={res.name}
-                  score={res.score}
+                  score={res.score || 0}
                   rank={res.rank}
                   key={i}
                 />
@@ -78,13 +107,13 @@ const Result = ({
           <p className="text-azureish-white">
             Last word was{' '}
             <span className="font-bold text-2xl mt-1">
-              {results.currentWord}
+              {results?.currentWord}
             </span>
           </p>
           <p className="text-azureish-white text-center font-bold underline mt-2">
             SKIPPED WORDS :
           </p>
-          {results.skippedWords.map((entry) => (
+          {results?.skippedWords.map((entry) => (
             <p
               className="font-bold text-xl mt-1 text-center text-azureish-white"
               key={entry.word + entry.scrambled}

@@ -1,6 +1,12 @@
 import React from 'react';
 
-const GameScores = ({ name, type, score }) => {
+export interface IGameScoresProps {
+  name: string;
+  type: 'player' | 'opponent';
+  score: number;
+}
+
+const GameScores = ({ name, type, score }: IGameScoresProps) => {
   return (
     <div className="flex flex-col gap-1 items-center">
       <div className="flex items-center gap-2 text-lg font-semibold text-azureish-white/70">

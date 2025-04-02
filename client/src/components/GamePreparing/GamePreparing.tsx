@@ -1,6 +1,11 @@
 import { useTimer } from 'react-timer-hook';
 
-const GamePreparing = ({ name, opponentName }) => {
+export interface IGamePreparingProps {
+  name: string;
+  opponentName: string;
+}
+
+const GamePreparing = ({ name, opponentName }: IGamePreparingProps) => {
   const { seconds } = useTimer({
     expiryTimestamp: new Date(Date.now() + 1000 * 5),
   });
