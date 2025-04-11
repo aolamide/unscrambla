@@ -22,7 +22,10 @@ const initialGame: IGame = {
 };
 
 const createGame = (host: string, hostName: string) => {
-  const gameId = getGameId();
+  let gameId = getGameId();
+  while (games[gameId]) {
+    gameId = getGameId();
+  }
   const game: IGame = { ...initialGame };
   game.gameId = gameId;
   game.host = host;
