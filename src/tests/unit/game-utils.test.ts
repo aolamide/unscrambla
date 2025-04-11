@@ -18,6 +18,21 @@ describe('Game Utils', () => {
       expect(scrambled).not.toBe(word);
       expect(scrambled.split('').sort()).toEqual(word.split('').sort());
     });
+
+    it('should regenerate if the scrambled word is the same as the original', () => {
+      const word = 'testing';
+
+      //mock math.floor to return 0 for each time it's called during the first iteration.
+      // This will cause the scrambleWord function to always return the same character
+      // and thus the same word
+      for (let i = 0; i < word.length; i++) {
+        jest.spyOn(Math, 'floor').mockReturnValueOnce(0);
+      }
+
+      const scrambled = scrambleWord(word);
+      expect(scrambled).not.toBe(word);
+      expect(scrambled.split('').sort()).toEqual(word.split('').sort());
+    });
   });
 
   describe('getRandomWord', () => {
