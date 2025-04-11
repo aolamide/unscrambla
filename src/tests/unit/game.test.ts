@@ -1,9 +1,18 @@
 import { checkCode, createGame, games, joinGame } from '../../helpers/game';
+import * as wordUtils from '../../helpers/words';
+import gameId from '../../helpers/gameId';
 
 const mockGameCode = '876123';
 jest.mock('../../helpers/gameId', () => jest.fn(() => mockGameCode));
 
 describe('Game functionalities', () => {
+  afterEach(() => {
+    // Clear the games object after each test
+    Object.keys(games).forEach((key) => {
+      delete games[key];
+    });
+    // jest.restoreAllMocks();
+  });
   describe('createGame', () => {
     it('should create a game', () => {
       const hostId = 'hostId';
@@ -16,6 +25,38 @@ describe('Game functionalities', () => {
         host: hostId,
         hostName: hostName,
         gameId: mockGameCode,
+        playerTwo: '',
+        playerTwoName: '',
+        hostScore: 0,
+        playerTwoScore: 0,
+        currentWord: '',
+        currentScrambled: '',
+        hostReplay: false,
+        playerTwoReplay: false,
+        gameLive: false,
+        skippedWords: [],
+      });
+    });
+
+    it('should regenerate game code if it already exists', () => {
+      const hostId = 'hostId';
+      const hostName = 'hostName';
+      createGame(hostId, hostName);
+
+      const newGameCode = '123456';
+      // Configure second call to return a different game code
+      (gameId as jest.Mock)
+        .mockImplementationOnce(() => mockGameCode)
+        .mockImplementationOnce(() => newGameCode);
+
+      const newGameId = createGame(hostId, hostName);
+      expect(newGameId).toBeDefined();
+      expect(newGameId).not.toBe(mockGameCode);
+      expect(games[newGameId]).toBeDefined();
+      expect(games[newGameId]).toMatchObject({
+        host: hostId,
+        hostName: hostName,
+        gameId: newGameCode,
         playerTwo: '',
         playerTwoName: '',
         hostScore: 0,
@@ -71,6 +112,52 @@ describe('Game functionalities', () => {
       const result = checkCode(mockGameCode);
       expect(result.success).toBe(false);
       expect(result.msg).toBe('Game already has two players.');
+    });
+  });
+
+  describe('joinGame', () => {
+    it('should join a game successfully', () => {
+      const word = 'scale';
+      const scrambledWord = 'lceas';
+      jest.spyOn(wordUtils, 'getRandomWord').mockReturnValue(word);
+      jest.spyOn(wordUtils, 'scrambleWord').mockReturnValue(scrambledWord);
+
+      const hostId = 'hostId';
+      const hostName = 'hostName';
+      createGame(hostId, hostName);
+      const playerId = 'playerId';
+      const playerName = 'playerName';
+      const result = joinGame(playerId, playerName, mockGameCode);
+      expect(result.success).toBe(true);
+      expect(result.game).toBeDefined();
+      expect(result.game).toMatchObject({
+        host: hostId,
+        hostName: hostName,
+        playerTwo: playerId,
+        playerTwoName: playerName,
+        gameId: mockGameCode,
+        currentWord: word,
+        currentScrambled: scrambledWord,
+        gameLive: true,
+      });
+    });
+
+    it('should return name clash error if player name is same as host name.', () => {
+      const hostId = 'hostId';
+      const hostName = 'hostName';
+      createGame(hostId, hostName);
+      const playerId = 'playerId';
+      const result = joinGame(playerId, hostName, mockGameCode);
+      expect(result.success).toBe(false);
+      expect(result.nameClash).toBe(true);
+    });
+
+    it('should return game not found error if invalid code is used.', () => {
+      const playerId = 'playerId';
+      const playerName = 'playerName';
+      const result = joinGame(playerId, playerName, 'invalidCode');
+      expect(result.success).toBe(false);
+      expect(result.msg).toBe('Game not found.');
     });
   });
 });
