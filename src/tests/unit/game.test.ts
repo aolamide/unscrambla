@@ -1,4 +1,10 @@
-import { checkCode, createGame, games, joinGame } from '../../helpers/game';
+import {
+  checkCode,
+  createGame,
+  games,
+  guessWord,
+  joinGame,
+} from '../../helpers/game';
 import * as wordUtils from '../../helpers/words';
 import gameId from '../../helpers/gameId';
 
@@ -158,6 +164,58 @@ describe('Game functionalities', () => {
       const result = joinGame(playerId, playerName, 'invalidCode');
       expect(result.success).toBe(false);
       expect(result.msg).toBe('Game not found.');
+    });
+  });
+
+  describe('guessWord', () => {
+    it('should return true and update host scores if guessed word is correct', () => {
+      const word = 'place';
+      const scrambledWord = 'clape';
+      jest.spyOn(wordUtils, 'getRandomWord').mockReturnValue(word);
+      jest.spyOn(wordUtils, 'scrambleWord').mockReturnValue(scrambledWord);
+
+      const hostId = 'hostId';
+      const hostName = 'hostName';
+      createGame(hostId, hostName);
+      const playerId = 'playerId';
+      const playerName = 'playerName';
+      joinGame(playerId, playerName, mockGameCode);
+      const result = guessWord(word, mockGameCode, hostId);
+      expect(result).toBe(true);
+      expect(games[mockGameCode].hostScore).toBe(1);
+    });
+
+    it('should return true and update playerTwo score if guessed word is correct', () => {
+      const word = 'scale';
+      const scrambledWord = 'lceas';
+      jest.spyOn(wordUtils, 'getRandomWord').mockReturnValue(word);
+      jest.spyOn(wordUtils, 'scrambleWord').mockReturnValue(scrambledWord);
+
+      const hostId = 'hostId';
+      const hostName = 'hostName';
+      createGame(hostId, hostName);
+      const playerId = 'playerId';
+      const playerName = 'playerName';
+      joinGame(playerId, playerName, mockGameCode);
+      const result = guessWord(word, mockGameCode, playerId);
+      expect(result).toBe(true);
+      expect(games[mockGameCode].playerTwoScore).toBe(1);
+    });
+
+    it('should return false if guessed word is incorrect', () => {
+      const word = 'scale';
+      const scrambledWord = 'lceas';
+      jest.spyOn(wordUtils, 'getRandomWord').mockReturnValue(word);
+      jest.spyOn(wordUtils, 'scrambleWord').mockReturnValue(scrambledWord);
+
+      const hostId = 'hostId';
+      const hostName = 'hostName';
+      createGame(hostId, hostName);
+      const playerId = 'playerId';
+      const playerName = 'playerName';
+      joinGame(playerId, playerName, mockGameCode);
+      const result = guessWord('wrongword', mockGameCode, hostId);
+      expect(result).toBe(false);
     });
   });
 });
