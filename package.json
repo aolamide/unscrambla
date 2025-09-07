@@ -9,9 +9,9 @@
     "start": "node dist/server",
     "lint": "eslint \"src/**/*.ts\" --fix",
     "format": "prettier --write \"src/**/*.ts\"",
-    "test" : "jest",
-    "test:watch" : "jest --watch",
-    "test:coverage" : "jest --coverage",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "test:unit": "jest src/tests/unit",
     "test:integration": "jest src/tests/integration"
   },
@@ -19,6 +19,7 @@
   "author": "Olamide Aboyeji",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "mongoose": "^8.13.1",
     "socket.io": "^4.8.1"

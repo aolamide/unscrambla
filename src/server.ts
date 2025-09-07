@@ -5,6 +5,9 @@ import { Server } from 'socket.io';
 import gameRouter from './routes/game.route';
 import IOSetup from './connection';
 import express, { Express, Response, Request } from 'express';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app: Express = express();
 const server = http.createServer(app);
