@@ -50,7 +50,7 @@ const IOSetup = function (io: Server) {
               'newScrambledWord',
               getCurrentScrambledWord(gameCode),
             );
-          }, 30 * 1000); //change word after 30 seconds if no player guesses it
+          }, 15 * 1000); //change word after 15 seconds if no player guesses it
 
           setTimeout(
             () => {
@@ -89,7 +89,7 @@ const IOSetup = function (io: Server) {
               'newScrambledWord',
               getCurrentScrambledWord(gameCode),
             );
-          }, 30 * 1000); //change word after 30 seconds if no player guesses it
+          }, 15 * 1000); //change word after 15 seconds if no player guesses it
 
           setTimeout(
             () => {
@@ -108,7 +108,7 @@ const IOSetup = function (io: Server) {
       if (result) {
         io.to(gameCode).emit(
           'adminMessage',
-          `${wordPick} is correct. Great job ${userName}!✔`,
+          `${wordPick} is right. Way to go ${userName}!🎉`,
         );
         io.to(gameCode).emit(
           'newScrambledWord',
@@ -123,12 +123,12 @@ const IOSetup = function (io: Server) {
             'newScrambledWord',
             getCurrentScrambledWord(gameCode),
           );
-        }, 30 * 1000); //change word after 30 seconds if no player guesses it
+        }, 15 * 1000); //change word after 15 seconds if no player guesses it
         io.to(gameCode).emit('scoreUpdate', getScores(gameCode));
       } else {
         io.to(gameCode).emit(
           'adminMessage',
-          `${wordPick} is wrong. Try again ${userName}❌`,
+          `${wordPick} is wrong. Go again ${userName}❌`,
         );
       }
     });
